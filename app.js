@@ -23,7 +23,7 @@ const User = require("./models/user.js");
 // DB CONNECT
 const atlasUrl = process.env.ATLASDB_URL;
 const localUrl = "mongodb://127.0.0.1:27017/wanderlust";
-
+//const url=process.env.MONGO_URL || localUrl;
 const connectDB = async () => {
   try {
     if (atlasUrl) {

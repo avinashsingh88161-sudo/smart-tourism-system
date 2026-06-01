@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": ""
+    "node": "v24.13.0"
   },
   "name": "vikas",
   "version": "1.0.0",
