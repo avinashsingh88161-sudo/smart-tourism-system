@@ -105,7 +105,7 @@ body {
 }
 /* RESPONSIVE DESIGN */
 
-/* Tablets */
+/*For tab*/
 @media (max-width: 992px) {
   .f-info {
     height: auto;
@@ -113,66 +113,56 @@ body {
     flex-direction: column;
     gap: 1rem;
   }
-
   .navbar {
     height: auto;
-    padding: 0.8rem;
+    padding: 1rem;
   }
-
   .listing-card {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
   }
 }
 
-/* Mobile */
+/*Mobile*/
 @media (max-width: 768px) {
-  body {
+  .body {
     font-size: 14px;
   }
-
   .container {
     padding: 10px;
   }
-
-  .card-img-top {
+  .card-im-top {
     height: 200px;
   }
-
   .f-info-links,
   .f-info-social,
   .f-info-brand {
-    font-size: 1rem;
+    font: size 1rem;
     margin-right: 0;
   }
-
   .fa-compass {
-    font-size: 1.5rem;
+    font-size: 1.5;
   }
-
   .preview-img {
     height: 200px;
   }
 }
 
-/* Small mobile */
+/*for small phones*/
+
 @media (max-width: 480px) {
   .navbar {
     flex-direction: column;
     align-items: center;
   }
-
   .nav-link {
     font-size: 14px;
   }
-
   .card-img-top {
     height: 180px;
   }
-
   .show-image {
     height: 20vh;
   }
-
   .preview-img {
     height: 160px;
   }
