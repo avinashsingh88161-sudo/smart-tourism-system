@@ -124,23 +124,22 @@ body {
 
 /*Mobile*/
 @media (max-width: 768px) {
-  .body {
+  body {
     font-size: 14px;
   }
   .container {
     padding: 10px;
   }
-  .card-im-top {
+  .card-img-top {
     height: 200px;
   }
   .f-info-links,
   .f-info-social,
   .f-info-brand {
-    font: size 1rem;
-    margin-right: 0;
+    font-size: 1rem;
   }
   .fa-compass {
-    font-size: 1.5;
+    font-size: 1.5rem;
   }
   .preview-img {
     height: 200px;
