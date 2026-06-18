@@ -1,10 +1,6 @@
 <% layout('layouts/boilerplate') %> 
 
-   <!-- <h3>All Listings </h3> -->
-   
-<!--<form action="/listings/new" method="GET">
-       <button>create new listing</button>
-    </form>-->
+  
 <style>
   #filters{
     display: flex;
@@ -107,7 +103,7 @@
 
         <div class="card-body">
           <h5><%= listing.title %></h5>
-          <p>₹ <%= listing.price.toLocaleString("en-IN") %>/night        <i class="tax-info">&nbsp; +18% GST</i></p>
+          <p>₹ <%= listing.price.toLocaleString("en-IN") %>/night<i class="tax-info">&nbsp; +18% GST</i></p>
         </div>
       </div>
     </a>
