@@ -1,0 +1,177 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="admin-container">
+  <div class="admin-header">
+    <div>
+      <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-user-shield text-danger me-2"></i>Admin Dashboard</h2>
+      <p class="text-muted mb-0">Overview of property performance, revenue analytics, and real-time booking statistics.</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="/admin/bookings" class="btn btn-dark rounded-pill px-3"><i class="fa-solid fa-calendar-check me-1"></i> Manage Bookings</a>
+      <a href="/admin/users" class="btn btn-outline-dark rounded-pill px-3"><i class="fa-solid fa-users me-1"></i> Users</a>
+      <a href="/admin/listings" class="btn btn-outline-dark rounded-pill px-3"><i class="fa-solid fa-building me-1"></i> Listings</a>
+    </div>
+  </div>
+
+  <!-- Analytics Cards Row -->
+  <div class="row g-3 mb-4">
+    <!-- Total Revenue -->
+    <div class="col-md-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-icon-wrapper stat-icon-green">
+          <i class="fa-solid fa-indian-rupee-sign"></i>
+        </div>
+        <div>
+          <div class="stat-value">&#8377; <%= stats.totalRevenue.toLocaleString("en-IN") %></div>
+          <div class="stat-label">Total Revenue</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Bookings -->
+    <div class="col-md-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-icon-wrapper stat-icon-blue">
+          <i class="fa-solid fa-suitcase"></i>
+        </div>
+        <div>
+          <div class="stat-value"><%= stats.totalBookings %></div>
+          <div class="stat-label">Total Bookings</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Users -->
+    <div class="col-md-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-icon-wrapper stat-icon-purple">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <div>
+          <div class="stat-value"><%= stats.totalUsers %></div>
+          <div class="stat-label">Total Registered Users</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Listings -->
+    <div class="col-md-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-icon-wrapper stat-icon-amber">
+          <i class="fa-solid fa-hotel"></i>
+        </div>
+        <div>
+          <div class="stat-value"><%= stats.totalListings %></div>
+          <div class="stat-label">Total Listings</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Secondary Stats Row -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="card border-0 bg-success-subtle text-success p-3 rounded-3 text-center">
+        <h4 class="fw-bold mb-1"><%= stats.confirmedBookings %></h4>
+        <span class="small fw-semibold">Confirmed Bookings</span>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card border-0 bg-warning-subtle text-warning-emphasis p-3 rounded-3 text-center">
+        <h4 class="fw-bold mb-1"><%= stats.pendingBookings %></h4>
+        <span class="small fw-semibold">Pending Bookings</span>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card border-0 bg-primary-subtle text-primary p-3 rounded-3 text-center">
+        <h4 class="fw-bold mb-1"><%= stats.completedBookings %></h4>
+        <span class="small fw-semibold">Completed Stays</span>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card border-0 bg-danger-subtle text-danger p-3 rounded-3 text-center">
+        <h4 class="fw-bold mb-1"><%= stats.cancelledBookings %></h4>
+        <span class="small fw-semibold">Cancelled Bookings</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tables Section -->
+  <div class="row g-4">
+    <!-- Recent Bookings -->
+    <div class="col-lg-7">
+      <div class="admin-table-container">
+        <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+          <h6 class="fw-bold mb-0"><i class="fa-solid fa-clock-rotate-left me-1 text-danger"></i> Recent Bookings</h6>
+          <a href="/admin/bookings" class="small text-danger fw-bold text-decoration-none">View All</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table admin-table align-middle">
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Guest</th>
+                <th>Property</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if(!recentBookings || recentBookings.length === 0) { %>
+                <tr><td colspan="5" class="text-center text-muted py-3">No recent bookings.</td></tr>
+              <% } else { %>
+                <% recentBookings.forEach(b => { %>
+                  <tr>
+                    <td class="fw-bold"><a href="/bookings/<%= b._id %>" class="text-dark text-decoration-none"><%= b.bookingId %></a></td>
+                    <td><%= b.guestName %></td>
+                    <td class="text-truncate" style="max-width: 150px;"><%= b.listing ? b.listing.title : "Property" %></td>
+                    <td class="fw-bold">&#8377; <%= b.totalAmount.toLocaleString("en-IN") %></td>
+                    <td>
+                      <span class="badge badge-status badge-status-<%= b.bookingStatus.toLowerCase() %>">
+                        <%= b.bookingStatus %>
+                      </span>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming Check-Ins -->
+    <div class="col-lg-5">
+      <div class="admin-table-container">
+        <div class="p-3 border-bottom">
+          <h6 class="fw-bold mb-0"><i class="fa-solid fa-plane-arrival me-1 text-danger"></i> Upcoming Check-Ins</h6>
+        </div>
+        <div class="p-3">
+          <% if(!upcomingCheckIns || upcomingCheckIns.length === 0) { %>
+            <p class="text-muted small mb-0 text-center py-3">No upcoming check-ins scheduled.</p>
+          <% } else { %>
+            <div class="list-group list-group-flush">
+              <% upcomingCheckIns.forEach(b => { %>
+                <div class="list-group-item bg-transparent px-0 border-bottom py-3">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <h6 class="fw-bold text-dark mb-1"><%= b.guestName %></h6>
+                      <p class="small text-muted mb-1"><i class="fa-solid fa-hotel me-1"></i> <%= b.listing ? b.listing.title : "Property" %></p>
+                      <span class="badge bg-light text-dark border"><%= b.numberOfNights %> Nights (<%= b.numberOfGuests %> Guests)</span>
+                    </div>
+                    <div class="text-end">
+                      <span class="badge bg-danger-subtle text-danger border border-danger-subtle mb-1 d-block">
+                        Check-in: <%= new Date(b.checkInDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) %>
+                      </span>
+                      <a href="/bookings/<%= b._id %>" class="btn btn-sm btn-outline-dark rounded-pill py-0 px-2 mt-1">View</a>
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

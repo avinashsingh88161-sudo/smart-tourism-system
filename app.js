@@ -12,6 +12,9 @@ const ExpressError = require("./utils/ExpressError");
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+const bookingRouter = require("./routes/booking.js");
+const adminRouter = require("./routes/admin.js");
+
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
@@ -101,6 +104,8 @@ app.get("/", (req, res) => {
 // ROUTES
 app.use("/listings", listingRouter);
 app.use("/listings", reviewRouter);
+app.use("/", bookingRouter);
+app.use("/admin", adminRouter);
 app.use("/", userRouter);
 
 // 404

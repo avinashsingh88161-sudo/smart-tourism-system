@@ -1,0 +1,122 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container my-5">
+  <div class="mb-4">
+    <a href="/bookings" class="text-secondary text-decoration-none small">
+      <i class="fa-solid fa-arrow-left me-1"></i> Back to My Bookings
+    </a>
+  </div>
+
+  <div class="row g-4">
+    <!-- Main Booking Summary -->
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+        <div class="card-header bg-dark text-white p-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div>
+            <span class="text-light opacity-75 small">Booking Reference</span>
+            <h4 class="fw-bold mb-0 text-white"><%= booking.bookingId %></h4>
+          </div>
+          <span class="badge badge-status badge-status-<%= booking.bookingStatus.toLowerCase() %> fs-6 px-3 py-2">
+            <%= booking.bookingStatus %>
+          </span>
+        </div>
+
+        <div class="card-body p-4">
+          <!-- Property Information -->
+          <h5 class="fw-bold mb-3"><i class="fa-solid fa-hotel text-danger me-2"></i>Property Information</h5>
+          <div class="d-flex align-items-center gap-3 bg-light p-3 rounded-3 mb-4">
+            <% if(booking.listing && booking.listing.image) { %>
+              <img src="<%= booking.listing.image.url || booking.listing.image %>" class="rounded-3" style="width: 100px; height: 80px; object-fit: cover;" alt="<%= booking.listing.title %>" />
+            <% } %>
+            <div>
+              <h5 class="fw-bold text-dark mb-1"><%= booking.listing ? booking.listing.title : "Property" %></h5>
+              <p class="text-muted small mb-1"><i class="fa-solid fa-location-dot text-danger me-1"></i> <%= booking.listing ? booking.listing.location : "" %>, <%= booking.listing ? booking.listing.country : "" %></p>
+              <% if(booking.listing) { %>
+                <a href="/listings/<%= booking.listing._id %>" class="small text-danger fw-bold text-decoration-none">View Property Listing <i class="fa-solid fa-external-link ms-1"></i></a>
+              <% } %>
+            </div>
+          </div>
+
+          <!-- Stay Information -->
+          <h5 class="fw-bold mb-3"><i class="fa-solid fa-calendar-check text-danger me-2"></i>Stay Details</h5>
+          <div class="row text-center g-3 bg-light p-4 rounded-3 mb-4">
+            <div class="col-4 border-end">
+              <span class="text-muted small d-block">Check-In</span>
+              <strong class="fs-6 text-dark"><%= new Date(booking.checkInDate).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></strong>
+            </div>
+            <div class="col-4 border-end">
+              <span class="text-muted small d-block">Check-Out</span>
+              <strong class="fs-6 text-dark"><%= new Date(booking.checkOutDate).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></strong>
+            </div>
+            <div class="col-4">
+              <span class="text-muted small d-block">Duration</span>
+              <strong class="fs-6 text-dark"><%= booking.numberOfNights %> Night(s)</strong>
+            </div>
+          </div>
+
+          <!-- Guest Details -->
+          <h5 class="fw-bold mb-3"><i class="fa-solid fa-users text-danger me-2"></i>Guest Details</h5>
+          <div class="row g-3 bg-light p-3 rounded-3 mb-4">
+            <div class="col-md-6">
+              <p class="mb-1 small"><strong>Guest Name:</strong> <%= booking.guestName %></p>
+              <p class="mb-0 small"><strong>Email:</strong> <%= booking.email %></p>
+            </div>
+            <div class="col-md-6">
+              <p class="mb-1 small"><strong>Phone:</strong> <%= booking.phone %></p>
+              <p class="mb-0 small"><strong>Occupancy:</strong> <%= booking.numberOfGuests %> Guests, <%= booking.numberOfRooms %> Rooms</p>
+            </div>
+            <% if(booking.specialRequest) { %>
+              <div class="col-12 border-top pt-2 mt-2">
+                <p class="mb-0 small text-secondary"><strong>Special Requests:</strong> "<%= booking.specialRequest %>"</p>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment & Actions Side Card -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-credit-card text-danger me-2"></i>Payment Details</h5>
+        
+        <div class="d-flex justify-content-between mb-2 small text-secondary">
+          <span>Rate / Night</span>
+          <span>&#8377; <%= booking.pricePerNight.toLocaleString("en-IN") %></span>
+        </div>
+        <div class="d-flex justify-content-between mb-2 small text-secondary">
+          <span>Subtotal (<%= booking.numberOfNights %> nights)</span>
+          <span>&#8377; <%= booking.subtotal.toLocaleString("en-IN") %></span>
+        </div>
+        <div class="d-flex justify-content-between mb-2 small text-secondary">
+          <span>Taxes & Fees (18% GST)</span>
+          <span>&#8377; <%= booking.tax.toLocaleString("en-IN") %></span>
+        </div>
+        
+        <hr />
+        
+        <div class="d-flex justify-content-between mb-3 fw-bold fs-5 text-dark">
+          <span>Total Amount</span>
+          <span class="text-danger">&#8377; <%= booking.totalAmount.toLocaleString("en-IN") %></span>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded-3 mb-4">
+          <span class="small text-muted">Payment Status:</span>
+          <span class="badge bg-secondary px-3 py-2"><%= booking.paymentStatus %></span>
+        </div>
+
+        <% if (booking.bookingStatus !== "Cancelled") { %>
+          <form action="/bookings/<%= booking._id %>/cancel" method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking? This action cannot be undone.')">
+            <button type="submit" class="btn btn-outline-danger w-100 py-2 rounded-3 fw-bold">
+              <i class="fa-solid fa-ban me-1"></i> Cancel Booking
+            </button>
+          </form>
+        <% } else { %>
+          <div class="alert alert-danger mb-0 text-center small">
+            <i class="fa-solid fa-circle-exclamation me-1"></i> This booking has been cancelled.
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>

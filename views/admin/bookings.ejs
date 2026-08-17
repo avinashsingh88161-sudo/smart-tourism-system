@@ -1,0 +1,136 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="admin-container">
+  <div class="admin-header">
+    <div>
+      <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-calendar-check text-danger me-2"></i>Booking Management</h2>
+      <p class="text-muted mb-0">View, search, filter, and manage all property reservations.</p>
+    </div>
+    <a href="/admin" class="btn btn-outline-dark rounded-pill px-3"><i class="fa-solid fa-gauge me-1"></i> Dashboard</a>
+  </div>
+
+  <!-- Search & Filter Controls Card -->
+  <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+    <form action="/admin/bookings" method="GET" class="row g-3">
+      <div class="col-md-5">
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+          <input type="text" name="search" class="form-control bg-light border-start-0" placeholder="Search by Booking ID, Guest, Email, Property..." value="<%= currentSearch %>" />
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <select name="status" class="form-select bg-light" onchange="this.form.submit()">
+          <option value="All" <%= currentStatus === 'All' ? 'selected' : '' %>>All Statuses</option>
+          <option value="Confirmed" <%= currentStatus === 'Confirmed' ? 'selected' : '' %>>Confirmed</option>
+          <option value="Pending" <%= currentStatus === 'Pending' ? 'selected' : '' %>>Pending</option>
+          <option value="Completed" <%= currentStatus === 'Completed' ? 'selected' : '' %>>Completed</option>
+          <option value="Cancelled" <%= currentStatus === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <select name="dateFilter" class="form-select bg-light" onchange="this.form.submit()">
+          <option value="all" <%= currentDateFilter === 'all' ? 'selected' : '' %>>All Dates</option>
+          <option value="today" <%= currentDateFilter === 'today' ? 'selected' : '' %>>Today's Check-ins</option>
+          <option value="upcoming" <%= currentDateFilter === 'upcoming' ? 'selected' : '' %>>Upcoming</option>
+          <option value="this_week" <%= currentDateFilter === 'this_week' ? 'selected' : '' %>>This Week</option>
+        </select>
+      </div>
+
+      <div class="col-md-1 d-flex">
+        <button type="submit" class="btn btn-danger w-100"><i class="fa-solid fa-filter"></i></button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Bookings Data Table -->
+  <div class="admin-table-container">
+    <div class="table-responsive">
+      <table class="table admin-table align-middle">
+        <thead>
+          <tr>
+            <th>Booking ID</th>
+            <th>Guest Info</th>
+            <th>Property</th>
+            <th>Check-In</th>
+            <th>Check-Out</th>
+            <th>Nights</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (!bookings || bookings.length === 0) { %>
+            <tr>
+              <td colspan="9" class="text-center py-5 text-muted">
+                <i class="fa-solid fa-inbox display-6 mb-2 d-block"></i>
+                No bookings match your current search criteria.
+              </td>
+            </tr>
+          <% } else { %>
+            <% bookings.forEach(b => { %>
+              <tr>
+                <td class="fw-bold">
+                  <a href="/bookings/<%= b._id %>" class="text-dark text-decoration-none"><%= b.bookingId %></a>
+                </td>
+                <td>
+                  <div class="fw-bold text-dark"><%= b.guestName %></div>
+                  <div class="small text-muted"><%= b.email %></div>
+                  <div class="small text-muted"><%= b.phone %></div>
+                </td>
+                <td>
+                  <div class="fw-bold text-dark text-truncate" style="max-width: 180px;">
+                    <%= b.listing ? b.listing.title : "Property" %>
+                  </div>
+                  <div class="small text-muted"><%= b.numberOfGuests %> Guests, <%= b.numberOfRooms %> Rooms</div>
+                </td>
+                <td class="small fw-semibold"><%= new Date(b.checkInDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></td>
+                <td class="small fw-semibold"><%= new Date(b.checkOutDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></td>
+                <td class="text-center fw-bold"><%= b.numberOfNights %></td>
+                <td class="fw-bold text-danger">&#8377; <%= b.totalAmount.toLocaleString("en-IN") %></td>
+                <td>
+                  <span class="badge badge-status badge-status-<%= b.bookingStatus.toLowerCase() %>">
+                    <%= b.bookingStatus %>
+                  </span>
+                </td>
+                <td>
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-dark dropdown-toggle rounded-pill" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Status
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                      <li>
+                        <form action="/admin/bookings/<%= b._id %>/status" method="POST">
+                          <input type="hidden" name="bookingStatus" value="Confirmed" />
+                          <button type="submit" class="dropdown-item text-success"><i class="fa-solid fa-check me-2"></i> Confirm</button>
+                        </form>
+                      </li>
+                      <li>
+                        <form action="/admin/bookings/<%= b._id %>/status" method="POST">
+                          <input type="hidden" name="bookingStatus" value="Completed" />
+                          <button type="submit" class="dropdown-item text-primary"><i class="fa-solid fa-circle-check me-2"></i> Mark Completed</button>
+                        </form>
+                      </li>
+                      <li>
+                        <form action="/admin/bookings/<%= b._id %>/status" method="POST" onsubmit="return confirm('Cancel this booking?')">
+                          <input type="hidden" name="bookingStatus" value="Cancelled" />
+                          <button type="submit" class="dropdown-item text-danger"><i class="fa-solid fa-ban me-2"></i> Cancel</button>
+                        </form>
+                      </li>
+                      <li><hr class="dropdown-divider" /></li>
+                      <li>
+                        <a class="dropdown-item text-secondary" href="/bookings/<%= b._id %>"><i class="fa-solid fa-eye me-2"></i> View Details</a>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container my-5">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-suitcase text-danger me-2"></i>My Bookings</h2>
+      <p class="text-muted mb-0">Manage and track your travel reservations and property stays.</p>
+    </div>
+    <a href="/listings" class="btn btn-outline-danger rounded-pill px-4">
+      <i class="fa-solid fa-plus me-1"></i> Book New Property
+    </a>
+  </div>
+
+  <% if (!bookings || bookings.length === 0) { %>
+    <div class="text-center py-5 bg-light rounded-4 border">
+      <i class="fa-solid fa-plane-departure text-muted display-3 mb-3"></i>
+      <h4 class="fw-bold text-dark">No Bookings Found</h4>
+      <p class="text-secondary mb-4">You haven't made any reservations yet. Start exploring amazing destinations!</p>
+      <a href="/listings" class="btn btn-danger rounded-pill px-4 py-2">Explore Destinations</a>
+    </div>
+  <% } else { %>
+    <div class="row g-4">
+      <% bookings.forEach(booking => { %>
+        <div class="col-md-6 col-lg-4">
+          <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="position-relative">
+              <% if (booking.listing && booking.listing.image) { %>
+                <img src="<%= booking.listing.image.url || booking.listing.image %>" class="card-img-top" style="height: 180px; object-fit: cover;" alt="<%= booking.listing.title %>" />
+              <% } else { %>
+                <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 180px;">
+                  <i class="fa-solid fa-hotel fa-2x"></i>
+                </div>
+              <% } %>
+              <span class="position-absolute top-0 end-0 m-3 badge badge-status badge-status-<%= booking.bookingStatus.toLowerCase() %> shadow-sm">
+                <%= booking.bookingStatus %>
+              </span>
+            </div>
+
+            <div class="card-body d-flex flex-direction-column justify-content-between p-4">
+              <div>
+                <span class="text-muted small fw-bold">ID: <%= booking.bookingId %></span>
+                <h5 class="fw-bold text-dark mt-1 mb-2 text-truncate"><%= booking.listing ? booking.listing.title : "Property" %></h5>
+                <p class="text-muted small mb-3"><i class="fa-solid fa-location-dot text-danger me-1"></i> <%= booking.listing ? booking.listing.location : "" %></p>
+
+                <div class="bg-light p-3 rounded-3 mb-3">
+                  <div class="d-flex justify-content-between small text-secondary mb-1">
+                    <span>Check-In:</span>
+                    <strong class="text-dark"><%= new Date(booking.checkInDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) %></strong>
+                  </div>
+                  <div class="d-flex justify-content-between small text-secondary mb-1">
+                    <span>Check-Out:</span>
+                    <strong class="text-dark"><%= new Date(booking.checkOutDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) %></strong>
+                  </div>
+                  <div class="d-flex justify-content-between small text-secondary">
+                    <span>Guests & Rooms:</span>
+                    <strong class="text-dark"><%= booking.numberOfGuests %> Guests, <%= booking.numberOfRooms %> Rooms</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                <div>
+                  <span class="text-muted small d-block">Total Paid</span>
+                  <span class="fw-bold fs-5 text-danger">&#8377; <%= booking.totalAmount.toLocaleString("en-IN") %></span>
+                </div>
+                <a href="/bookings/<%= booking._id %>" class="btn btn-dark btn-sm rounded-pill px-3">
+                  View Details <i class="fa-solid fa-chevron-right ms-1 small"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>

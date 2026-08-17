@@ -5,21 +5,21 @@ module.exports.renderSignupForm=(req, res) => {
 };
 
 module.exports.renderLoginForm= (req, res) => {
-  res.render("users/login.ejs");
+  res.render("users/login");
 };
 
-module.exports.login= async (req, res) => {
-    req.flash("success", "Welcome to Wanderlust you are logged in!");
-    let redirectUrl = res.locals.redirectUrl || "/listings";
-    res.redirect(redirectUrl);
-  };
+module.exports.login = async (req, res) => {
+  req.flash("success", "Welcome to Smart Tourism System! You are logged in.");
+  let redirectUrl = res.locals.redirectUrl || "/listings";
+  res.redirect(redirectUrl);
+};
 
-  module.exports.logout= (req, res, next) => {
+module.exports.logout = (req, res, next) => {
   req.logout((err) => {
     if (err) {
       return next(err);
     }
-    req.flash("success", "you are logout!");
+    req.flash("success", "You have been logged out of Smart Tourism System.");
     res.redirect("/listings");
   });
 };

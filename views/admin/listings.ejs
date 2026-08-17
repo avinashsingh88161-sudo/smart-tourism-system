@@ -1,0 +1,70 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="admin-container">
+  <div class="admin-header">
+    <div>
+      <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-hotel text-danger me-2"></i>Listing Inventory Management</h2>
+      <p class="text-muted mb-0">Overview of all active properties, prices, host owners, and total booking counts.</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="/listings/new" class="btn btn-danger rounded-pill px-3"><i class="fa-solid fa-plus me-1"></i> Add Listing</a>
+      <a href="/admin" class="btn btn-outline-dark rounded-pill px-3"><i class="fa-solid fa-gauge me-1"></i> Dashboard</a>
+    </div>
+  </div>
+
+  <div class="admin-table-container">
+    <div class="table-responsive">
+      <table class="table admin-table align-middle">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Host Owner</th>
+            <th>Location</th>
+            <th>Price / Night</th>
+            <th>Total Bookings</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (!listings || listings.length === 0) { %>
+            <tr><td colspan="6" class="text-center py-4 text-muted">No listings found.</td></tr>
+          <% } else { %>
+            <% listings.forEach(l => { %>
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center gap-3">
+                    <% if(l.image) { %>
+                      <img src="<%= l.image.url || l.image %>" class="rounded-3" style="width: 50px; height: 45px; object-fit: cover;" alt="<%= l.title %>" />
+                    <% } %>
+                    <div>
+                      <a href="/listings/<%= l._id %>" class="fw-bold text-dark text-decoration-none"><%= l.title %></a>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="small fw-semibold text-secondary">
+                    @<%= (l.owner && l.owner.username) ? l.owner.username : "N/A" %>
+                  </span>
+                </td>
+                <td><%= l.location %>, <%= l.country %></td>
+                <td class="fw-bold text-dark">&#8377; <%= l.price ? l.price.toLocaleString("en-IN") : "0" %></td>
+                <td class="text-center">
+                  <span class="badge bg-light text-dark border px-3 py-2"><%= l.bookingCount %> Bookings</span>
+                </td>
+                <td>
+                  <div class="d-flex gap-2">
+                    <a href="/listings/<%= l._id %>" class="btn btn-sm btn-outline-dark rounded-pill px-3">View</a>
+                    <a href="/listings/<%= l._id %>/edit" class="btn btn-sm btn-dark rounded-pill px-3">Edit</a>
+                    <form action="/listings/<%= l._id %>?_method=DELETE" method="POST" style="display: inline;">
+                      <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Delete this listing?')">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

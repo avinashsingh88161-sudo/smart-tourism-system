@@ -1,0 +1,68 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="admin-container">
+  <div class="admin-header">
+    <div>
+      <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-users text-danger me-2"></i>User Management</h2>
+      <p class="text-muted mb-0">Directory of registered system users, roles, and booking activity metrics.</p>
+    </div>
+    <a href="/admin" class="btn btn-outline-dark rounded-pill px-3"><i class="fa-solid fa-gauge me-1"></i> Dashboard</a>
+  </div>
+
+  <div class="admin-table-container">
+    <div class="table-responsive">
+      <table class="table admin-table align-middle">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Role</th>
+            <th>Total Bookings</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (!users || users.length === 0) { %>
+            <tr><td colspan="6" class="text-center py-4 text-muted">No users found.</td></tr>
+          <% } else { %>
+            <% users.forEach(u => { %>
+              <tr>
+                <td class="fw-bold text-dark">
+                  <i class="fa-solid fa-user-circle text-secondary me-2"></i><%= u.username %>
+                </td>
+                <td><%= u.email %></td>
+                <td><%= u.phone || "N/A" %></td>
+                <td>
+                  <% if (u.role === 'admin') { %>
+                    <span class="badge bg-danger text-white"><i class="fa-solid fa-user-shield me-1"></i> Admin</span>
+                  <% } else { %>
+                    <span class="badge bg-secondary text-white">User</span>
+                  <% } %>
+                </td>
+                <td class="fw-bold text-center">
+                  <span class="badge bg-light text-dark border px-3 py-2"><%= u.bookingCount %> Bookings</span>
+                </td>
+                <td>
+                  <form action="/admin/users/<%= u._id %>/role" method="POST" style="display: inline;">
+                    <% if (u.role === 'admin') { %>
+                      <input type="hidden" name="role" value="user" />
+                      <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill" onclick="return confirm('Demote user to standard User role?')">
+                        Demote to User
+                      </button>
+                    <% } else { %>
+                      <input type="hidden" name="role" value="admin" />
+                      <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Promote user to Admin role?')">
+                        Promote to Admin
+                      </button>
+                    <% } %>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

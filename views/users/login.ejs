@@ -1,21 +1,88 @@
 <% layout('layouts/boilerplate') %>
 
-<h1 class="col-6 offset-3">Login to Smart-Tourism-System</h1>
+<div class="auth-page-container">
+  <div class="auth-split-card">
+    <!-- Left Hero Banner (Desktop) -->
+    <div class="auth-hero-section">
+      <div class="auth-badge">
+        <i class="fa-solid fa-compass"></i> Smart Tourism System
+      </div>
+      <div class="auth-hero-content">
+        <h2 class="auth-hero-title">Explore the world with Smart Tourism</h2>
+        <p class="auth-hero-subtitle">
+          Discover handpicked destinations, luxury stays, and unforgettable travel experiences tailored just for you.
+        </p>
+      </div>
+      <div class="auth-hero-footer">
+        <span><i class="fa-solid fa-shield-halved"></i> Verified Stays</span>
+        <span><i class="fa-solid fa-bolt"></i> Instant Access</span>
+      </div>
+    </div>
 
-<div class="row mt-3">
-  <div class="col-6 offset-3">
-    <form action="/login" method="POST" class="needs-validation">
-      <div class="mb-3">
-        <label class="form-label">Username</label>
-        <input name="username" type="text" class="form-control" required />
+    <!-- Right Authentication Form -->
+    <div class="auth-form-section">
+      <div class="auth-header">
+        <h1 class="auth-title">Welcome Back</h1>
+        <p class="auth-subtitle">Sign in to continue your journey</p>
       </div>
 
-      <div class="mb-3">
-        <label class="form-label">Password</label>
-        <input name="password" type="password" class="form-control" required />
-      </div>
+      <form action="/login" method="POST" class="needs-validation auth-form" novalidate>
+        <div class="mb-3">
+          <label for="username" class="form-label-custom">Username</label>
+          <div class="input-group-auth">
+            <input
+              id="username"
+              name="username"
+              type="text"
+              class="form-control"
+              placeholder="Enter your username"
+              required
+            />
+            <i class="fa-regular fa-user input-icon"></i>
+            <div class="invalid-feedback">Please enter your username.</div>
+          </div>
+        </div>
 
-      <button type="submit" class="btn btn-success">Login</button>
-    </form>
+        <div class="mb-3">
+          <label for="login-password" class="form-label-custom">Password</label>
+          <div class="input-group-auth">
+            <input
+              id="login-password"
+              name="password"
+              type="password"
+              class="form-control"
+              placeholder="Enter your password"
+              required
+            />
+            <i class="fa-solid fa-lock input-icon"></i>
+            <button
+              type="button"
+              class="password-toggle-btn"
+              data-target="login-password"
+              title="Toggle password visibility"
+              aria-label="Toggle password visibility"
+            >
+              <i class="fa-regular fa-eye"></i>
+            </button>
+            <div class="invalid-feedback">Please enter your password.</div>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="auth-submit-btn"
+          data-loading-text="Signing in..."
+        >
+          <span>Sign In</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="auth-footer-text">
+        Don't have an account? <a href="/signup">Sign up</a>
+      </div>
+    </div>
   </div>
 </div>
+
+<script src="/js/auth.js"></script>

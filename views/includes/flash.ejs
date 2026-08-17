@@ -1,14 +1,43 @@
-<%if(success&&success.length>0){%>
-<div class="alert alert-success alert-dismissible fade show col-6 offset-3 text-center" role="alert">
-    <%=success%>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-<%}%>
+<% if (success && success.length > 0) { %>
+  <div class="custom-flash-toast alert alert-success alert-dismissible fade show border-0 shadow-lg rounded-4 mb-4 mx-auto" style="max-width: 650px; background: #ffffff; border-left: 5px solid #22c55e !important;" role="alert">
+    <div class="d-flex align-items-center gap-3">
+      <div class="bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; flex-shrink: 0;">
+        <i class="fa-solid fa-circle-check fs-5"></i>
+      </div>
+      <div class="flex-grow-1">
+        <span class="fw-bold text-dark d-block small text-uppercase tracking-wider">Success</span>
+        <span class="text-secondary small fw-medium"><%= success %></span>
+      </div>
+      <button type="button" class="btn-close shadow-none ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  </div>
+<% } %>
 
+<% if (error && error.length > 0) { %>
+  <div class="custom-flash-toast alert alert-danger alert-dismissible fade show border-0 shadow-lg rounded-4 mb-4 mx-auto" style="max-width: 650px; background: #ffffff; border-left: 5px solid #ef4444 !important;" role="alert">
+    <div class="d-flex align-items-center gap-3">
+      <div class="bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; flex-shrink: 0;">
+        <i class="fa-solid fa-circle-exclamation fs-5"></i>
+      </div>
+      <div class="flex-grow-1">
+        <span class="fw-bold text-dark d-block small text-uppercase tracking-wider">Notice</span>
+        <span class="text-secondary small fw-medium"><%= error %></span>
+      </div>
+      <button type="button" class="btn-close shadow-none ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  </div>
+<% } %>
 
-<%if(error&&error.length>0){%>
-<div class="alert alert-danger alert-dismissible fade show col-6 offset-3 text-center" role="alert">
-    <%=error%>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-<%}%>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const flashToasts = document.querySelectorAll(".custom-flash-toast");
+    flashToasts.forEach((toast) => {
+      setTimeout(() => {
+        if (toast) {
+          toast.classList.remove("show");
+          setTimeout(() => toast.remove(), 300);
+        }
+      }, 4500);
+    });
+  });
+</script>
